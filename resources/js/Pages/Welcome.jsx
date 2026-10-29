@@ -28,6 +28,19 @@ const MapPinIcon = (p) => <Icon {...p} path={<><path d="M20 10c0 6-8 12-8 12s-8-
 const PhoneIcon = (p) => <Icon {...p} path={<path d="M22 16.9v2.8a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h2.8a2 2 0 0 1 2 1.7 12.8 12.8 0 0 0 .7 2.8 2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.4-1.1a2 2 0 0 1 2.1-.5 12.8 12.8 0 0 0 2.8.7 2 2 0 0 1 1.7 2Z" />} />;
 const MailIcon = (p) => <Icon {...p} path={<><rect x="2" y="4" width="20" height="16" rx="2" /><path d="m22 6-10 7L2 6" /></>} />;
 
+// ── Service-specific icons ──
+const PlaneIcon = (p) => <Icon {...p} path={<path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z" />} />;
+const ClipboardListIcon = (p) => <Icon {...p} path={<><rect x="8" y="2" width="8" height="4" rx="1" /><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /><path d="M9 12h6" /><path d="M9 16h6" /></>} />;
+const HourglassIcon = (p) => <Icon {...p} path={<><path d="M5 22h14" /><path d="M5 2h14" /><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22" /><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2" /></>} />;
+const FolderArchiveIcon = (p) => <Icon {...p} path={<><rect x="2" y="3" width="20" height="5" rx="1" /><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8" /><path d="M10 12h4" /></>} />;
+const LockIcon = (p) => <Icon {...p} path={<><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></>} />;
+const SparklesIcon = (p) => <Icon {...p} path={<><path d="M12 3 9.5 8.5 4 11l5.5 2.5L12 19l2.5-5.5L20 11l-5.5-2.5L12 3z" /></>} />;
+
+// ── About / Values icons ──
+const TargetIcon = (p) => <Icon {...p} path={<><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></>} />;
+const EyeVisionIcon = (p) => <Icon {...p} path={<><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12z" /><circle cx="12" cy="12" r="3" /></>} />;
+const HeartHandshakeIcon = (p) => <Icon {...p} path={<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />} />;
+
 // ─────────────────────────────────────────────────────────────
 // Logo
 // ─────────────────────────────────────────────────────────────
@@ -80,22 +93,61 @@ const StatCard = ({ icon: IconCmp, value, label }) => (
 );
 
 // ─────────────────────────────────────────────────────────────
-// Service card
+// Service cards
+//   FeaturedService — the live service (Leave Application)
+//   UpcomingService — locked "coming soon" card
 // ─────────────────────────────────────────────────────────────
-const ServiceCard = ({ icon: IconCmp, label, description }) => (
-    <div className="group flex flex-col items-start rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-900/5 sm:p-6">
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition-colors duration-300 group-hover:bg-blue-100 sm:h-14 sm:w-14">
-            <IconCmp className="h-6 w-6 sm:h-7 sm:w-7" strokeWidth={1.8} />
+const FeaturedService = ({ icon: IconCmp, name, description, href }) => (
+    <Link
+        href={href}
+        className="group relative block overflow-hidden rounded-3xl border border-blue-200 bg-gradient-to-br from-blue-50 via-white to-sky-50 p-6 shadow-lg shadow-blue-900/5 transition-all duration-300 hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-900/10 sm:p-8"
+    >
+        <div aria-hidden="true" className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-blue-500/10 blur-2xl" />
+
+        <div className="relative">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-600 ring-1 ring-emerald-200">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                Available Now
+            </span>
+
+            <div className="mt-4 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-5">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-600/30 sm:h-16 sm:w-16">
+                    <IconCmp className="h-7 w-7 sm:h-8 sm:w-8" strokeWidth={1.8} />
+                </div>
+                <div className="min-w-0">
+                    <h3 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">{name}</h3>
+                    <p className="mt-1.5 max-w-lg text-sm leading-relaxed text-slate-600">{description}</p>
+                </div>
+            </div>
+
+            <div className="mt-6 flex items-center justify-end">
+                <span className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all duration-300 group-hover:gap-3 group-hover:bg-blue-700 group-hover:shadow-xl group-hover:shadow-blue-600/30">
+                    Open Service
+                    <ArrowRightIcon className="h-4 w-4" />
+                </span>
+            </div>
         </div>
-        <h3 className="mt-4 text-base font-bold tracking-tight text-slate-900 sm:text-lg">{label}</h3>
-        {description && <p className="mt-1.5 text-sm leading-relaxed text-slate-500">{description}</p>}
+    </Link>
+);
+
+const UpcomingService = ({ icon: IconCmp, name, description }) => (
+    <div className="flex h-full flex-col rounded-2xl border border-slate-200/70 bg-slate-50/50 p-5 sm:p-6">
+        <div className="flex items-start justify-between gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 text-slate-400">
+                <IconCmp className="h-5 w-5" strokeWidth={1.8} />
+            </div>
+            <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-slate-500 ring-1 ring-slate-200">
+                <LockIcon className="h-2.5 w-2.5" />
+                Soon
+            </span>
+        </div>
+        <h4 className="mt-3 text-sm font-bold tracking-tight text-slate-700">{name}</h4>
+        <p className="mt-1 text-xs leading-relaxed text-slate-500">{description}</p>
     </div>
 );
 
 // ─────────────────────────────────────────────────────────────
 // Team photo — dual-image circular container with an INSTANT swap
-//   Desktop: formal → alternate on :hover, no fade, no zoom
-//   Mobile:  no auto-alternate — formal photo only
 // ─────────────────────────────────────────────────────────────
 const TeamPhoto = ({ name, image, hoverImage }) => {
     const initials = name.split(/\s+/).slice(0, 2).map((p) => p[0]).join('').toUpperCase();
@@ -106,14 +158,12 @@ const TeamPhoto = ({ name, image, hoverImage }) => {
 
     return (
         <div className="relative h-full w-full overflow-hidden rounded-full bg-gradient-to-br from-blue-50 to-sky-100">
-            {/* Initials fallback — behind both photos */}
             <div className="absolute inset-0 flex items-center justify-center" aria-hidden="true">
                 <span className="text-2xl font-extrabold tracking-tight text-blue-600 sm:text-3xl">
                     {initials}
                 </span>
             </div>
 
-            {/* Formal photo — default state. z-10 keeps it above the fallback. */}
             <img
                 src={image}
                 alt={name}
@@ -123,9 +173,6 @@ const TeamPhoto = ({ name, image, hoverImage }) => {
                 onError={hideOnError}
             />
 
-            {/* Alternate photo — hidden by default; appears instantly on
-                group hover. z-20 keeps it above the formal photo.
-                pointer-events-none so it never traps the cursor. */}
             <img
                 src={hoverImage}
                 alt=""
@@ -153,15 +200,11 @@ const TeamNode = ({ name, role, image, hoverImage, size = 'md' }) => {
     return (
         <div className="group flex flex-col items-center">
             <div className={`relative ${dims} shrink-0`}>
-                {/* Hover glow — decorative, must NOT intercept pointer events */}
                 <div
                     aria-hidden="true"
                     className="pointer-events-none absolute -inset-2 rounded-full bg-blue-500/0 blur-lg transition-all duration-500 group-hover:bg-blue-500/25"
                 />
 
-                {/* Gradient ring + white gap + image frame.
-                    `relative z-10` guarantees this layer sits above
-                    the glow and receives all hover / pointer events. */}
                 <div className="relative z-10 h-full w-full rounded-full bg-gradient-to-br from-blue-500 via-blue-600 to-sky-400 p-[2px] shadow-lg shadow-blue-900/10">
                     <div className="h-full w-full rounded-full bg-white p-[3px]">
                         <TeamPhoto
@@ -172,7 +215,6 @@ const TeamNode = ({ name, role, image, hoverImage, size = 'md' }) => {
                     </div>
                 </div>
 
-                {/* Online status dot — decorative, must NOT intercept hover */}
                 <div
                     aria-hidden="true"
                     className="pointer-events-none absolute bottom-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-white shadow-sm"
@@ -189,10 +231,8 @@ const TeamNode = ({ name, role, image, hoverImage, size = 'md' }) => {
     );
 };
 
-
-
 // ─────────────────────────────────────────────────────────────
-// Connector: L1 → L2 (single fanout, 3-way)
+// Connectors
 // ─────────────────────────────────────────────────────────────
 const ConnectorRow = () => (
     <div className="grid grid-cols-3">
@@ -214,9 +254,6 @@ const ConnectorRow = () => (
     </div>
 );
 
-// ─────────────────────────────────────────────────────────────
-// Connector: L2 → L3 (fan-in / fan-out across a horizontal rail)
-// ─────────────────────────────────────────────────────────────
 const MultiFanConnector = ({ parents = 3, children = 4 }) => (
     <div className="relative h-16 sm:h-20">
         <div
@@ -251,7 +288,7 @@ const MultiFanConnector = ({ parents = 3, children = 4 }) => (
 );
 
 // ─────────────────────────────────────────────────────────────
-// Mobile spine — vertical list with left-side connector
+// Mobile team spine
 // ─────────────────────────────────────────────────────────────
 const MobileTeamList = ({ team }) => (
     <div className="relative mx-auto max-w-md">
@@ -298,34 +335,61 @@ export default function Welcome({ canLogin }) {
 
     const facebookUrl = 'https://www.facebook.com/profile.php?id=100064538958287';
 
-    const services = [
-        { name: 'Employee Profile', icon: UserIcon, description: 'View and update your personal and employment information.' },
-        { name: 'Leave Management', icon: CalendarIcon, description: 'File leave requests and track your balances in real time.' },
-        { name: 'Attendance', icon: ClockIcon, description: 'Monitor your daily time records and attendance history.' },
-        { name: 'HR Services', icon: BriefcaseIcon, description: 'Access certificates, clearances, and other HR documents.' },
-        { name: 'More Systems', icon: LayoutGridIcon, description: 'Explore additional tools integrated with the HRMO Portal.' },
+    // Live service — only Leave Application is currently available
+    const featuredService = {
+        name: 'Leave Application',
+        icon: CalendarIcon,
+        description: 'File leave requests, check your leave credits, and track the status of your applications — all in real time.',
+    };
+
+    // Coming soon services
+    const upcomingServices = [
+        { name: 'Travel Order', icon: PlaneIcon, description: 'Request and manage official travel authorizations.' },
+        { name: 'Pass Slip', icon: ClipboardListIcon, description: 'Submit and track personal pass slip requests.' },
+        { name: 'Compensatory Time Off', icon: HourglassIcon, description: 'File and monitor your CTO credits and usage.' },
+        { name: 'Records Management', icon: FolderArchiveIcon, description: 'Access and manage your official HR records.' },
     ];
 
-  
+    const aboutStats = [
+        { value: '8', label: 'HR Professionals', icon: UsersIcon },
+        { value: '5', label: 'HR Services', icon: BriefcaseIcon },
+        { value: '1', label: 'Unified Portal', icon: ShieldCheckIcon },
+        { value: '24/7', label: 'Portal Access', icon: ClockIcon },
+    ];
+
+    const aboutPillars = [
+        {
+            title: 'Our Mission',
+            icon: TargetIcon,
+            text: 'To empower every employee with efficient, transparent, and accessible HR services that support both personal and organizational growth.',
+        },
+        {
+            title: 'Our Vision',
+            icon: EyeVisionIcon,
+            text: 'A modern, people-centered HR office that sets the standard for public service excellence in local government.',
+        },
+        {
+            title: 'Our Values',
+            icon: HeartHandshakeIcon,
+            text: 'Integrity, service, and care — guiding every interaction and every process we deliver for our employees.',
+        },
+    ];
 
     // 8 HRMO team members — arranged 1 / 3 / 4 in the org chart.
-    // Each member has TWO local images:
-    //   image      → formal photo (default)
-    //   hoverImage → alternate photo shown on hover
     const team = [
-        { name: 'Joseph A. Actub',   role: 'HRMO Head',            image: '/images/erap.jpg', hoverImage: '/images/erap.jpg' },
-        { name: 'Trishia Z. Pitogo',   role: 'HRMO I',        image: '/images/trishia.jpg', hoverImage: '/images/trishia.jpg' },
-        { name: 'Michael E. Escaba', role: 'ADMIN AIDE III',      image: '/images/michael.jpg', hoverImage: '/images/michael.jpg' },
-        { name: 'Rezan M. Cagatan',  role: 'DEMO I', image: '/images/rezan.jpg', hoverImage: '/images/rezan.jpg' },
-        { name: 'Maria Teresa L. Ardeño',  role: 'Payroll Officer',      image: '/images/maria.jpg', hoverImage: '/images/maria.jpg' },
-        { name: 'Yogene Avendan',   role: 'HR Monitoring Officer',     image: '/images/yogene.jpg', hoverImage: '/images/yogene.jpg' },
-        { name: 'Lunel Jay C. Maape', role: 'HR Messenger',         image: '/images/lunel.jpg', hoverImage: '/images/lunel.jpg' },
-        { name: 'BJ P. De la Cruz', role: 'Web Developer',         image: '/images/bj.jpg', hoverImage: '/images/bj.jpg' },
+        { name: 'Joseph A. Actub',        role: 'HRMO Head',           image: '/images/erap.jpg',     hoverImage: '/images/erap.jpg' },
+        { name: 'Trishia Z. Pitogo',      role: 'HRMO I',              image: '/images/trishia.jpg',  hoverImage: '/images/trishia.jpg' },
+        { name: 'Michael E. Escaba',      role: 'ADMIN AIDE III',      image: '/images/michael.jpg',  hoverImage: '/images/michael.jpg' },
+        { name: 'Rezan M. Cagatan',       role: 'DEMO I',              image: '/images/rezan.jpg',    hoverImage: '/images/rezan.jpg' },
+        { name: 'Maria Teresa L. Ardeño', role: 'Payroll Officer',     image: '/images/MARIA.jpg',    hoverImage: '/images/MARIA.jpg' },
+        { name: 'Yogene Avendan',         role: 'HR Monitoring Officer', image: '/images/yogene.jpg', hoverImage: '/images/yogene.jpg' },
+        { name: 'Lunel Jay C. Maape',     role: 'HR Messenger',        image: '/images/lunel.jpg',    hoverImage: '/images/lunel.jpg' },
+        { name: 'BJ P. De la Cruz',       role: 'Web Developer',       image: '/images/bj.jpg',       hoverImage: '/images/bj.jpg' },
     ];
 
-    const topMember  = team[0];          // Level 1 — 1 head
-    const midTeam    = team.slice(1, 4); // Level 2 — 3 leads
-    const bottomTeam = team.slice(4);    // Level 3 — 4 staff
+    const topMember  = team[0];
+    const midTeam    = team.slice(1, 4);
+    const bottomTeam = team.slice(4);
 
     const navLinks = [
         { href: '#services', label: 'Services' },
@@ -418,21 +482,76 @@ export default function Welcome({ canLogin }) {
                         </div>
                     </section>
 
-                   
+                    {/* ── SERVICES ────────────────────────────── */}
+                    <section id="services" className="scroll-mt-20 border-t border-slate-100 px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24">
+                        <div className="mx-auto max-w-7xl">
+                            <SectionHeading
+                                eyebrow="Our Services"
+                                title="Everything you need, in one place"
+                                description="Access all your HR needs through a single, secure portal. Leave Application is live today — more services are on the way."
+                            />
+
+                            {/* Featured live service */}
+                            <div className="mt-12 sm:mt-14">
+                                <FeaturedService
+                                    {...featuredService}
+                                    href={route('login')}
+                                />
+                            </div>
+
+                            {/* Upcoming services */}
+                            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4">
+                                {upcomingServices.map((service, i) => (
+                                    <UpcomingService key={i} {...service} />
+                                ))}
+                            </div>
+
+                            {/* Roadmap note */}
+                            <div className="mt-10 flex items-start gap-3 rounded-2xl border border-blue-100 bg-blue-50/60 p-4 sm:mt-12 sm:p-5">
+                                <SparklesIcon className="mt-0.5 h-5 w-5 shrink-0 text-blue-600" />
+                                <div>
+                                    <p className="text-sm font-semibold text-slate-900">More services coming soon</p>
+                                    <p className="mt-1 text-sm leading-relaxed text-slate-600">
+                                        We're continuously working to bring more HR services online. Check back regularly for the latest updates.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
 
                     {/* ── ABOUT ───────────────────────────────── */}
-                    <section className="scroll-mt-20 border-t border-slate-100 bg-slate-50/60 px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24">
+                    <section id="about" className="scroll-mt-20 border-t border-slate-100 bg-slate-50/60 px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24">
                         <div className="mx-auto max-w-7xl">
                             <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
+                                {/* Photo with caption overlay */}
                                 <div className="relative">
-                                    <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-lg shadow-blue-900/5">
-                                        <img src="/images/hroffice.jpg" alt="HRMO Office" loading="lazy" className="aspect-[4/3] w-full object-cover" />
+                                    <div className="group relative overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-blue-900/10">
+                                        <img
+                                            src="/images/hroffice.jpg"
+                                            alt="HRMO Office"
+                                            loading="lazy"
+                                            className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                        />
+                                        <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/15 to-transparent" />
+                                        <div className="absolute inset-x-0 bottom-0 p-6">
+                                            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-200">
+                                                Our Office
+                                            </p>
+                                            <p className="mt-1 text-base font-bold text-white sm:text-lg">
+                                                Human Resource Management Office
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div aria-hidden="true" className="absolute -bottom-4 -right-4 hidden h-24 w-24 rounded-2xl bg-blue-600/10 blur-xl sm:block" />
+                                    <div aria-hidden="true" className="absolute -bottom-4 -right-4 -z-10 hidden h-24 w-24 rounded-2xl bg-blue-600/10 blur-xl sm:block" />
                                 </div>
 
+                                {/* Content */}
                                 <div>
-                                    <SectionHeading align="left" eyebrow="About HRMO" title="Better people. Stronger organizations." />
+                                    <SectionHeading
+                                        align="left"
+                                        eyebrow="About HRMO"
+                                        title="Better people. Stronger organizations."
+                                    />
                                     <div className="mt-6 space-y-4 text-sm leading-relaxed text-slate-600 sm:text-base">
                                         <p>The Human Resource Management Office is dedicated to supporting the well-being, growth, and productivity of every employee in our organization.</p>
                                         <p>From recruitment and records to benefits and wellness, our office ensures that HR services are accessible, transparent, and efficient — so you can focus on doing your best work.</p>
@@ -452,74 +571,89 @@ export default function Welcome({ canLogin }) {
                                     </ul>
                                 </div>
                             </div>
+
+                            {/* Stats row */}
+                            <div className="mt-14 grid grid-cols-2 gap-4 sm:mt-16 sm:grid-cols-4 sm:gap-6">
+                                {aboutStats.map((stat, i) => (
+                                    <StatCard key={i} {...stat} />
+                                ))}
+                            </div>
+
+                            {/* Mission / Vision / Values */}
+                            <div className="mt-6 grid grid-cols-1 gap-4 sm:mt-8 sm:grid-cols-3 sm:gap-5">
+                                {aboutPillars.map((pillar, i) => (
+                                    <div
+                                        key={i}
+                                        className="group flex flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-900/5"
+                                    >
+                                        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition-colors group-hover:bg-blue-100">
+                                            <pillar.icon className="h-5 w-5" strokeWidth={1.8} />
+                                        </div>
+                                        <h3 className="mt-4 text-base font-bold tracking-tight text-slate-900">{pillar.title}</h3>
+                                        <p className="mt-2 text-sm leading-relaxed text-slate-500">{pillar.text}</p>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </section>
 
-                    {/* ── TEAM — connected network org chart ─── */}
-                {/* ── TEAM — connected network org chart ─── */}
-<section id="team" className="relative scroll-mt-20 overflow-hidden px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24">
-    <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-[0.35]"
-        style={{
-            backgroundImage: 'radial-gradient(circle at 1px 1px, rgb(191 219 254) 1px, transparent 0)',
-            backgroundSize: '22px 22px',
-            maskImage: 'radial-gradient(ellipse at center, black 40%, transparent 80%)',
-            WebkitMaskImage: 'radial-gradient(ellipse at center, black 40%, transparent 80%)',
-        }}
-    />
+                    {/* ── TEAM ────────────────────────────────── */}
+                    <section id="team" className="relative scroll-mt-20 overflow-hidden px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24">
+                        <div
+                            aria-hidden="true"
+                            className="pointer-events-none absolute inset-0 opacity-[0.35]"
+                            style={{
+                                backgroundImage: 'radial-gradient(circle at 1px 1px, rgb(191 219 254) 1px, transparent 0)',
+                                backgroundSize: '22px 22px',
+                                maskImage: 'radial-gradient(ellipse at center, black 40%, transparent 80%)',
+                                WebkitMaskImage: 'radial-gradient(ellipse at center, black 40%, transparent 80%)',
+                            }}
+                        />
 
-    <div className="relative mx-auto max-w-5xl">
-        <SectionHeading
-            eyebrow="Meet the team"
-            title="The people behind HRMO"
-            description="A connected team committed to serving every employee with care, professionalism, and integrity. Hover over a photo to see a different side of them."
-        />
+                        <div className="relative mx-auto max-w-5xl">
+                            <SectionHeading
+                                eyebrow="Meet the team"
+                                title="The people behind HRMO"
+                                description="A connected team committed to serving every employee with care, professionalism, and integrity. Hover over a photo to see a different side of them."
+                            />
 
-        {/* ── Desktop org chart (md+) ─────────── */}
-        <div className="mt-16 hidden md:block">
-            {/* Level 1 — Head */}
-            <div className="flex justify-center">
-                <div className="relative">
-                    <TeamNode {...topMember} size="md" />
-                    <div className="absolute left-1/2 top-full h-14 w-px -translate-x-1/2 bg-gradient-to-b from-blue-500 to-blue-400 sm:h-16" />
-                    <span className="absolute left-1/2 top-[calc(100%+3.5rem)] h-2 w-2 -translate-x-1/2 -translate-y-1/2 animate-pulse-dot rounded-full bg-blue-500 shadow-[0_0_10px_3px_rgba(59,130,246,0.6)] sm:top-[calc(100%+4rem)]" />
-                </div>
-            </div>
+                            <div className="mt-16 hidden md:block">
+                                <div className="flex justify-center">
+                                    <div className="relative">
+                                        <TeamNode {...topMember} size="md" />
+                                        <div className="absolute left-1/2 top-full h-14 w-px -translate-x-1/2 bg-gradient-to-b from-blue-500 to-blue-400 sm:h-16" />
+                                        <span className="absolute left-1/2 top-[calc(100%+3.5rem)] h-2 w-2 -translate-x-1/2 -translate-y-1/2 animate-pulse-dot rounded-full bg-blue-500 shadow-[0_0_10px_3px_rgba(59,130,246,0.6)] sm:top-[calc(100%+4rem)]" />
+                                    </div>
+                                </div>
 
-            {/* Fan-out: L1 → 3 leads */}
-            <ConnectorRow />
+                                <ConnectorRow />
 
-            {/* Level 2 — three leads */}
-            <div className="grid grid-cols-3 gap-4 sm:gap-6">
-                {midTeam.map((member, i) => (
-                    <div key={i} className="flex justify-center">
-                        <TeamNode {...member} size="md" />
-                    </div>
-                ))}
-            </div>
+                                <div className="grid grid-cols-3 gap-4 sm:gap-6">
+                                    {midTeam.map((member, i) => (
+                                        <div key={i} className="flex justify-center">
+                                            <TeamNode {...member} size="md" />
+                                        </div>
+                                    ))}
+                                </div>
 
-            {/* Fan-in + fan-out: 3 leads → 4 staff */}
-            <MultiFanConnector parents={3} children={4} />
+                                <MultiFanConnector parents={3} children={4} />
 
-            {/* Level 3 — four staff */}
-            <div className="grid grid-cols-4 gap-4 sm:gap-6">
-                {bottomTeam.map((member, i) => (
-                    <div key={i} className="flex justify-center">
-                        <TeamNode {...member} size="md" />
-                    </div>
-                ))}
-            </div>
-        </div>
+                                <div className="grid grid-cols-4 gap-4 sm:gap-6">
+                                    {bottomTeam.map((member, i) => (
+                                        <div key={i} className="flex justify-center">
+                                            <TeamNode {...member} size="md" />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
 
-        {/* ── Mobile vertical spine (below md) ── */}
-        <div className="mt-12 md:hidden">
-            <MobileTeamList team={team} />
-        </div>
-    </div>
-</section>
+                            <div className="mt-12 md:hidden">
+                                <MobileTeamList team={team} />
+                            </div>
+                        </div>
+                    </section>
 
-                    {/* ── CONNECT / FACEBOOK ──────────────────── */}
+                    {/* ── CONNECT ─────────────────────────────── */}
                     <section id="connect" className="scroll-mt-20 border-t border-slate-100 bg-slate-50/60 px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24">
                         <div className="mx-auto max-w-5xl">
                             <SectionHeading
@@ -571,7 +705,7 @@ export default function Welcome({ canLogin }) {
                                                 {[
                                                     { icon: MapPinIcon, label: 'Opol, Misamis Oriental' },
                                                     { icon: PhoneIcon, label: '(088) 000-0000' },
-                                                    { icon: MailIcon, label: 'hrmo@opol.gov.ph' },
+                                                    { icon: MailIcon, label: 'hrmo.opol@gmail.com' },
                                                 ].map((item, i) => (
                                                     <div key={i} className="flex items-center gap-2.5 text-xs text-slate-600 sm:text-[13px]">
                                                         <item.icon className="h-4 w-4 shrink-0 text-blue-500" />
@@ -643,7 +777,7 @@ export default function Welcome({ canLogin }) {
                                     </li>
                                     <li className="flex items-center gap-2 text-sm text-slate-600">
                                         <MailIcon className="h-4 w-4 text-slate-400" />
-                                        hrmo@opol.gov.ph
+                                        hrmo.opol@gmail.com
                                     </li>
                                     <li className="flex items-center gap-2 text-sm text-slate-600">
                                         <PhoneIcon className="h-4 w-4 text-slate-400" />

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+
 use Laravel\Passport\Contracts\AuthorizationViewResponse;
 use Laravel\Passport\Passport;
 
@@ -16,8 +17,7 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-
-     if (is_file(base_path('.env'))) {
+        if (is_file(base_path('.env'))) {
             try {
                 \Dotenv\Dotenv::createMutable(base_path(), '.env')->safeLoad();
             } catch (\Throwable $e) {
@@ -25,7 +25,6 @@ class AppServiceProvider extends ServiceProvider
             }
         }
 
-        
         $this->app->bind(ApplicationLauncher::class, DirectLinkLauncher::class);
     }
 
@@ -53,17 +52,30 @@ class AppServiceProvider extends ServiceProvider
         Passport::authorizationView('vendor.passport.authorize');
 
         // ---- Declare OAuth scopes ----
-        // Without this, any `scope=profile` request is rejected as invalid_scope.
         Passport::tokensCan([
             'profile' => 'Access your basic portal profile (name, username, email, office, role, employment status)',
         ]);
-
-        // If a client omits `scope`, default to `profile`.
         Passport::defaultScopes(['profile']);
 
-        RateLimiter::for('login', function (Request $request) {
-            return Limit::perMinute(10)->by($request->ip());
-        });
+        /*
+        |------------------------------------------------------------------
+        | Login rate limiting
+        |------------------------------------------------------------------
+        | Two independent buckets are returned:
+        |
+        |  1. Per-credential-pair (username + IP). This is the primary
+        |     brute-force defense. A legitimate user mistyping their
+        |     password a few times still fits inside the window.
+        |
+        |  2. Per-IP. Catches distributed attempts rotating usernames
+        |     from the same source.
+        |
+        | On a successful login, LoginRequest::authenticate() clears the
+        | per-credential bucket so earlier typos don't compound.
+        */
+        RateLimiter::for('login-ip', function (Request $request) {
+    return Limit::perMinute(30)->by('login-ip:'.$request->ip());
+});
 
         if ($this->app->environment('production')) {
             URL::forceScheme('https');

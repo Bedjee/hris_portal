@@ -11,6 +11,16 @@ use Illuminate\Validation\ValidationException;
 
 class LoginRequest extends FormRequest
 {
+    /**
+     * Max failed attempts per credential-pair before lockout.
+     */
+    private const MAX_ATTEMPTS = 5;
+
+    /**
+     * Lockout window in seconds (5 minutes).
+     */
+    private const DECAY_SECONDS = 300;
+
     public function authorize(): bool
     {
         return true;
@@ -20,7 +30,7 @@ class LoginRequest extends FormRequest
     {
         return [
             'username' => ['required', 'string', 'max:255'],
-            'password' => ['required', 'string'],
+            'password' => ['required', 'string', 'max:255'],
             'remember' => ['sometimes', 'boolean'],
         ];
     }
@@ -35,17 +45,19 @@ class LoginRequest extends FormRequest
         $credentials = [
             'username'  => (string) $this->input('username'),
             'password'  => (string) $this->input('password'),
-            'is_active' => true, // inactive accounts can never authenticate
+            'is_active' => true, // deactivated accounts can never authenticate
         ];
 
         if (! Auth::attempt($credentials, $this->boolean('remember'))) {
-            RateLimiter::hit($this->throttleKey(), 300);
+            RateLimiter::hit($this->throttleKey(), self::DECAY_SECONDS);
 
             throw ValidationException::withMessages([
                 'username' => __('auth.failed'),
             ]);
         }
 
+        // Only successful logins reset the bucket, so repeated typos
+        // don't compound against a user who eventually gets it right.
         RateLimiter::clear($this->throttleKey());
     }
 
@@ -54,7 +66,7 @@ class LoginRequest extends FormRequest
      */
     protected function ensureIsNotRateLimited(): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (! RateLimiter::tooManyAttempts($this->throttleKey(), self::MAX_ATTEMPTS)) {
             return;
         }
 
@@ -70,9 +82,14 @@ class LoginRequest extends FormRequest
         ]);
     }
 
+    /**
+     * Cache key for the credential-pair failure counter.
+     *
+     * Namespaced to avoid collision with any other rate limiter.
+     */
     public function throttleKey(): string
     {
-        return Str::transliterate(
+        return 'login-attempt:'.Str::transliterate(
             Str::lower((string) $this->input('username')).'|'.$this->ip()
         );
     }

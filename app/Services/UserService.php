@@ -17,15 +17,17 @@ class UserService
     {
         return DB::transaction(function () use ($actor, $data) {
             $user = new User();
-            $user->fill(Arr::only($data, ['name', 'username', 'email', 'office_id','employment_status']));
+            $user->fill(Arr::only($data, ['name','username','email','office_id','employment_status']));
 
-            if (! empty($data['password'])) {
-                $user->password = $data['password'];
-            }
+if (! empty($data['password'])) {
+    $user->password = $data['password'];
+    // Admin-issued / imported credentials must be rotated on first use
+    $user->must_change_password = true;
+}
 
-            $user->role      = $data['role'] ?? User::ROLE_USER;
-            $user->is_active = (bool) ($data['is_active'] ?? true);
-            $user->save();
+$user->role      = $data['role'] ?? User::ROLE_USER;
+$user->is_active = (bool) ($data['is_active'] ?? true);
+$user->save();
 
             $this->audit->log($actor, 'user.created', $user, [
     'username'          => $user->username,

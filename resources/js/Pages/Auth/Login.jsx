@@ -215,12 +215,7 @@ export default function Login({ status, errors = {} }) {
                                             >
                                                 Password
                                             </label>
-                                            <a
-                                                href="#"
-                                                className="text-xs font-semibold text-blue-600 transition-colors hover:text-blue-500 hover:underline"
-                                            >
-                                                Forgot password?
-                                            </a>
+                                            
                                         </div>
                                         <div className="relative">
                                             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400 sm:pl-4">

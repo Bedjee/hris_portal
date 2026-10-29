@@ -12,15 +12,15 @@ class EnsurePasswordIsChanged
     {
         $user = $request->user();
 
-        if (
-            $user
-            && $user->must_change_password
-            && ! $request->routeIs('password.change.*')
-            && ! $request->routeIs('logout')
-        ) {
-            return redirect()
-                ->route('password.change.edit')
-                ->with('warning', 'You must change your password before continuing.');
+        // Only relevant for signed-in users with the flag on.
+        if ($user && $user->must_change_password) {
+            // Allow the change form itself and logout.
+            if (! $request->routeIs('password.change.*')
+                && ! $request->routeIs('logout')) {
+                return redirect()
+                    ->route('password.change.edit')
+                    ->with('warning', 'You must change your password before continuing.');
+            }
         }
 
         return $next($request);

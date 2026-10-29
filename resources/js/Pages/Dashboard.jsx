@@ -43,6 +43,21 @@ export default function Dashboard({ profile, applications = [] }) {
         applications.map((a) => a.category).filter(Boolean),
     ).size;
 
+    // Functional "Contact administrator" mailto with pre-filled context
+    // so the HRMO admin knows exactly who is requesting portal access.
+    const emailBody = `Hello HRMO Team,
+
+I would like to request access to the HRMO Portal.
+
+Name: ${profile?.name || ''}
+Role: ${profile?.role || ''}${profile?.office ? `\nOffice: ${profile.office}` : ''}
+
+Thank you.`;
+
+    const contactMailto = `mailto:hrmo.opol@gmail.com?subject=${encodeURIComponent(
+        'HRMO Portal Access Request',
+    )}&body=${encodeURIComponent(emailBody)}`;
+
     return (
         <UserLayout>
             <Head title="Dashboard" />
@@ -65,82 +80,58 @@ export default function Dashboard({ profile, applications = [] }) {
                         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
                     </div>
 
-                    <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-                        {/* Identity block */}
-                        <div className="flex items-center gap-4">
-                            {/* Avatar with soft halo */}
-                            <div className="relative shrink-0">
-                                <div
-                                    aria-hidden="true"
-                                    className="absolute inset-0 rounded-2xl bg-white/20 blur-md"
-                                />
-                                <div
-                                    aria-hidden="true"
-                                    className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-white/25 to-white/10 text-base font-semibold text-white ring-1 ring-inset ring-white/30 backdrop-blur-md sm:h-16 sm:w-16 sm:text-lg"
-                                >
-                                    {initials || '?'}
-                                </div>
-                            </div>
-
-                            {/* Name + meta */}
-                            <div className="min-w-0 flex-1">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-blue-100/70">
-                                    Welcome back
-                                </p>
-
-                                <h1 className="mt-1 truncate text-xl font-semibold tracking-tight text-white sm:text-2xl lg:text-3xl">
-                                    {profile.name}
-                                </h1>
-
-                                <div className="mt-2 flex flex-wrap items-center gap-1.5 sm:mt-3 sm:gap-2">
-                                    <span className="inline-flex items-center rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-medium capitalize text-white ring-1 ring-inset ring-white/20 backdrop-blur-sm sm:text-xs">
-                                        {profile.role}
-                                    </span>
-
-                                    {profile.office && (
-                                        <span className="inline-flex max-w-full items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-blue-50 ring-1 ring-inset ring-white/15 backdrop-blur-sm sm:text-xs">
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 20 20"
-                                                fill="currentColor"
-                                                className="h-3.5 w-3.5 shrink-0"
-                                                aria-hidden="true"
-                                            >
-                                                <path
-                                                    fillRule="evenodd"
-                                                    d="M4 16.5v-13h-.25a.75.75 0 0 1 0-1.5h12.5a.75.75 0 0 1 0 1.5H16v13h.25a.75.75 0 0 1 0 1.5h-3.5a.75.75 0 0 1-.75-.75v-2.5a.75.75 0 0 0-.75-.75h-2.5a.75.75 0 0 0-.75.75v2.5a.75.75 0 0 1-.75.75h-3.5a.75.75 0 0 1 0-1.5H4Zm3-11a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm5.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1ZM7 9a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1A.5.5 0 0 1 7 10V9Zm5.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V9a.5.5 0 0 0-.5-.5h-1Z"
-                                                    clipRule="evenodd"
-                                                />
-                                            </svg>
-                                            <span className="truncate">
-                                                {profile.office}
-                                            </span>
-                                        </span>
-                                    )}
-                                </div>
+                    <div className="relative flex items-center gap-4">
+                        {/* Avatar with soft halo */}
+                        <div className="relative shrink-0">
+                            <div
+                                aria-hidden="true"
+                                className="absolute inset-0 rounded-2xl bg-white/20 blur-md"
+                            />
+                            <div
+                                aria-hidden="true"
+                                className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-white/25 to-white/10 text-base font-semibold text-white ring-1 ring-inset ring-white/30 backdrop-blur-md sm:h-16 sm:w-16 sm:text-lg"
+                            >
+                                {initials || '?'}
                             </div>
                         </div>
 
-                        {/* CTA — full width on mobile, inline on desktop */}
-                        <a
-                            href="#applications"
-                            className="group inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-blue-800 shadow-lg shadow-blue-950/20 transition-all duration-200 hover:bg-blue-50 hover:shadow-xl hover:shadow-blue-950/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-blue-800 sm:w-auto"
-                        >
-                            Browse applications
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                                className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
-                                aria-hidden="true"
-                            >
-                                <path
-                                    fillRule="evenodd"
-                                    d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z"
-                                    clipRule="evenodd"
-                                />
-                            </svg>
-                        </a>
+                        {/* Name + meta */}
+                        <div className="min-w-0 flex-1">
+                            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-blue-100/70">
+                                Welcome back
+                            </p>
+
+                            <h1 className="mt-1 truncate text-xl font-semibold tracking-tight text-white sm:text-2xl lg:text-3xl">
+                                {profile.name}
+                            </h1>
+
+                            <div className="mt-2 flex flex-wrap items-center gap-1.5 sm:mt-3 sm:gap-2">
+                                <span className="inline-flex items-center rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-medium capitalize text-white ring-1 ring-inset ring-white/20 backdrop-blur-sm sm:text-xs">
+                                    {profile.role}
+                                </span>
+
+                                {profile.office && (
+                                    <span className="inline-flex max-w-full items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-blue-50 ring-1 ring-inset ring-white/15 backdrop-blur-sm sm:text-xs">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20"
+                                            fill="currentColor"
+                                            className="h-3.5 w-3.5 shrink-0"
+                                            aria-hidden="true"
+                                        >
+                                            <path
+                                                fillRule="evenodd"
+                                                d="M4 16.5v-13h-.25a.75.75 0 0 1 0-1.5h12.5a.75.75 0 0 1 0 1.5H16v13h.25a.75.75 0 0 1 0 1.5h-3.5a.75.75 0 0 1-.75-.75v-2.5a.75.75 0 0 0-.75-.75h-2.5a.75.75 0 0 0-.75.75v2.5a.75.75 0 0 1-.75.75h-3.5a.75.75 0 0 1 0-1.5H4Zm3-11a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm5.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1ZM7 9a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1A.5.5 0 0 1 7 10V9Zm5.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V9a.5.5 0 0 0-.5-.5h-1Z"
+                                                clipRule="evenodd"
+                                            />
+                                        </svg>
+                                        <span className="truncate">
+                                            {profile.office}
+                                        </span>
+                                    </span>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </section>
 
@@ -209,7 +200,7 @@ export default function Dashboard({ profile, applications = [] }) {
                 </section>
 
                 {/* ── Applications ─────────────────────────────── */}
-                <section id="applications" aria-labelledby="applications-heading">
+                <section id="applications" aria-labelledby="applications-heading" className="scroll-mt-20">
                     <div className="mb-4 flex items-end justify-between gap-3">
                         <div>
                             <h2
@@ -272,7 +263,7 @@ export default function Dashboard({ profile, applications = [] }) {
                                 </p>
 
                                 <a
-                                    href="mailto:admin@example.com"
+                                    href={contactMailto}
                                     className="mt-6 inline-flex items-center gap-2 rounded-xl bg-gradient-to-br from-blue-700 to-blue-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-blue-900/30 transition-all duration-200 hover:shadow-md hover:shadow-blue-900/40 hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-offset-2"
                                 >
                                     Contact administrator
